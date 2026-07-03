@@ -31,12 +31,12 @@ export async function GET(
 
   const mapped = messages.map((m: any) => ({
     id: m.id,
+    order_id: '',
+    type: 'text',
+    is_filtered: false,
     message: m.message,
     created_at: m.created_at,
     sender_id: m.sender_id,
-    sender_username: m.profiles?.username || 'User',
-    sender_avatar_url: m.profiles?.avatar_url || null,
-    sender_role: m.profiles?.role || 'user',
   }))
 
   return NextResponse.json(mapped)
@@ -110,12 +110,12 @@ export async function POST(
   // Format response for UI (ChatMessageData shape)
   const mappedMessage = {
     id: inserted.id,
+    order_id: '',
+    type: 'text',
+    is_filtered: false,
     message: inserted.message,
     created_at: inserted.created_at,
     sender_id: inserted.sender_id,
-    sender_username: (inserted as any).profiles?.username || 'User',
-    sender_avatar_url: (inserted as any).profiles?.avatar_url || null,
-    sender_role: (inserted as any).profiles?.role || 'user',
   }
 
   return NextResponse.json({ message: mappedMessage }, { status: 201 })

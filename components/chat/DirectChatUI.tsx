@@ -82,19 +82,16 @@ export function DirectChatUI({ currentUserId }: { currentUserId: string }) {
           const incoming = payload.new as any
           if (incoming.sender_id === currentUserId) return // Já adicionamos optimisticamente
           
-          // Precisamos buscar os detalhes do remetente (username, avatar) se não veio no payload.
-          // Como o payload.new não faz join automático, a UI pode quebrar se não tiver o username.
-          // Vamos buscar rápido o usuário.
-          const { data: profile } = await supabase.from('profiles').select('username, avatar_url, role').eq('id', incoming.sender_id).single()
+          // Não precisamos de profile pois ChatMessage não renderiza isso
           
           const msgData: ChatMessageData = {
             id: incoming.id,
+            order_id: '',
+            type: 'text',
+            is_filtered: false,
             message: incoming.message,
             created_at: incoming.created_at,
             sender_id: incoming.sender_id,
-            sender_username: profile?.username || 'User',
-            sender_avatar_url: profile?.avatar_url || null,
-            sender_role: profile?.role || 'user',
           }
 
           setMessages((prev) => {
