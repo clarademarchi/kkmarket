@@ -2,7 +2,7 @@
 
 import { useActionState, useRef, useState } from 'react'
 import Link from 'next/link'
-import { registerAction, signInWithOAuthAction, type RegisterFormState } from '@/app/actions/auth'
+import { registerAction, getOAuthUrlAction, type RegisterFormState } from '@/app/actions/auth'
 import { createClient } from '@/lib/supabase/client'
 
 function GoogleIcon() {
@@ -66,7 +66,13 @@ export function RegisterForm({ dict }: { dict: any }) {
   async function handleOAuth(provider: 'google' | 'discord') {
     try {
       setOauthLoading(provider)
-      await signInWithOAuthAction(provider)
+      const res = await getOAuthUrlAction(provider)
+      if (res?.error) {
+        console.error(res.error)
+        setOauthLoading(null)
+      } else if (res?.url) {
+        window.location.assign(res.url)
+      }
     } catch (err) {
       console.error(err)
       setOauthLoading(null)
@@ -128,13 +134,11 @@ export function RegisterForm({ dict }: { dict: any }) {
       {step === 0 && (
         <>
           <div className="mb-6">
-            <form action={() => handleOAuth('google')}>
-              <button type="submit" disabled={!!oauthLoading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--gm-ink-faint)]/50 bg-[var(--gm-paper-3)] px-4 py-3 text-sm font-semibold text-[var(--gm-ink)] transition-all hover:border-[var(--gm-violet)]/50 disabled:opacity-50">
-                {oauthLoading === 'google' ? <span className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--gm-ink-faint)] border-t-[var(--gm-violet)]" /> : <GoogleIcon />}
-                Google
-              </button>
-            </form>
+            <button type="button" onClick={() => handleOAuth('google')} disabled={!!oauthLoading}
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--gm-ink-faint)]/50 bg-[var(--gm-paper-3)] px-4 py-3 text-sm font-semibold text-[var(--gm-ink)] transition-all hover:border-[var(--gm-violet)]/50 disabled:opacity-50">
+              {oauthLoading === 'google' ? <span className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--gm-ink-faint)] border-t-[var(--gm-violet)]" /> : <GoogleIcon />}
+              Google
+            </button>
           </div>
 
           <div className="relative mb-6">

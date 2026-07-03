@@ -47,22 +47,14 @@ export async function GET(request: Request) {
 
         if (profile && !profile.onboarding_complete) {
           // Se for login OAuth novo com onboarding incompleto, envia para /completar-perfil
-          return NextResponse.redirect(`${origin}/completar-perfil`)
+          return NextResponse.redirect(new URL('/completar-perfil', request.url))
         }
       }
 
-      const forwardedHost = request.headers.get('x-forwarded-host')
-      const isLocalEnv = process.env.NODE_ENV === 'development'
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`)
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
-      } else {
-        return NextResponse.redirect(`${origin}${next}`)
-      }
+      return NextResponse.redirect(new URL(next, request.url))
     }
   }
 
   // Em caso de erro, redireciona de volta para o login com parâmetro de erro
-  return NextResponse.redirect(`${origin}/login?error=auth-code-error`)
+  return NextResponse.redirect(new URL('/login?error=auth-code-error', request.url))
 }

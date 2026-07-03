@@ -148,9 +148,10 @@ export async function signOutAction() {
   redirect('/')
 }
 
-export async function signInWithOAuthAction(provider: 'google' | 'discord') {
+export async function getOAuthUrlAction(provider: 'google' | 'discord') {
   const supabase = await createClient()
-  const origin = (await headers()).get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://kkmarket.com.br'
+  // Usa o NEXT_PUBLIC_APP_URL de forma estrita para evitar que Vercel Preview URLs burlem o allow-list
+  const origin = process.env.NEXT_PUBLIC_APP_URL || 'https://kkmarket.com.br'
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
@@ -164,7 +165,7 @@ export async function signInWithOAuthAction(provider: 'google' | 'discord') {
     return { error: 'Erro ao iniciar login social.' }
   }
 
-  redirect(data.url)
+  return { url: data.url }
 }
 
 // ─── Completa perfil de usuário OAuth (username definitivo) ──────────────────
