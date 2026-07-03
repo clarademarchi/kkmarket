@@ -130,15 +130,13 @@ export function NotificationBell() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative text-[var(--gm-ink-dim)] hover:text-[var(--gm-ink)] hover:bg-[var(--gm-paper-3)] transition-colors">
-          <Bell className="h-5 w-5" />
-          {unreadCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--gm-violet)] text-[9px] font-bold text-[#1a1126] shadow-sm">
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </span>
-          )}
-        </Button>
+      <DropdownMenuTrigger className="relative flex h-10 w-10 items-center justify-center rounded-md text-[var(--gm-ink-dim)] hover:text-[var(--gm-ink)] hover:bg-[var(--gm-paper-3)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+        <Bell className="h-5 w-5" />
+        {unreadCount > 0 && (
+          <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--gm-violet)] text-[9px] font-bold text-[#1a1126] shadow-sm">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80 p-0 overflow-hidden bg-surface/95 backdrop-blur-xl border-border/40 shadow-2xl">
         <div className="p-3 border-b border-border/40 flex items-center justify-between bg-black/20">
