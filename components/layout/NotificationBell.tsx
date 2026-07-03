@@ -79,14 +79,14 @@ export function NotificationBell() {
           setNotifications((prev) => [newNotif, ...prev])
           
           // Disparar toast
-          if (newNotif.type === 'chat_message') {
+          if (newNotif.type === 'message_received') {
             toast.message(newNotif.title, {
               description: newNotif.message,
               action: {
                 label: 'Abrir Chat',
                 onClick: () => {
                   if (newNotif.reference_type === 'direct_chat') {
-                    router.push(`/painel/mensagens`)
+                    router.push(`/painel/mensagens?chatId=${newNotif.reference_id}`)
                   } else {
                     router.push(`/pedidos/${newNotif.reference_id}`)
                   }
@@ -113,9 +113,9 @@ export function NotificationBell() {
     await supabase.from('notifications').update({ is_read: true }).eq('id', notif.id)
 
     // Redirecionamento
-    if (notif.type === 'chat_message') {
+    if (notif.type === 'message_received') {
       if (notif.reference_type === 'direct_chat') {
-        router.push(`/painel/mensagens`)
+        router.push(`/painel/mensagens?chatId=${notif.reference_id}`)
       } else {
         router.push(`/pedidos/${notif.reference_id}`)
       }

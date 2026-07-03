@@ -100,7 +100,7 @@ export async function POST(
   const recipientId = chat.participant1_id === user.id ? chat.participant2_id : chat.participant1_id
   await admin.from('notifications').insert({
     user_id: recipientId,
-    type: 'chat_message',
+    type: 'message_received',
     title: 'Nova mensagem (Direta)',
     message: `Você recebeu uma nova mensagem direta.`,
     reference_id: chatId,

@@ -205,7 +205,7 @@ export async function POST(
   const recipientId = order.buyer_id === user.id ? order.seller_id : order.buyer_id
   await admin.from('notifications').insert({
     user_id: recipientId,
-    type: 'chat_message',
+    type: 'message_received',
     title: 'Nova mensagem no chat',
     message: `Você recebeu uma nova mensagem no pedido #${orderId.slice(0, 8)}`,
     reference_id: orderId,
