@@ -81,7 +81,7 @@ export async function POST(
     .insert({
       chat_id: chatId,
       sender_id: user.id,
-      message: filtered.text,
+      message: filtered.content,
     })
     .select(`
       id, message, created_at, sender_id,
