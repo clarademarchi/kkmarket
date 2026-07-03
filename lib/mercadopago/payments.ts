@@ -71,6 +71,7 @@ export async function createPixPayment(
 ): Promise<MPPaymentResult> {
   try {
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString() // 30min
+    const notificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://kkmarket.com.br'}/api/webhooks/mercadopago`
 
     const payment = await paymentClient.create({
       body: {
@@ -80,6 +81,7 @@ export async function createPixPayment(
         description:        params.description,
         external_reference: params.orderId,
         date_of_expiration: expiresAt,
+        notification_url:   notificationUrl,
       },
     })
 
@@ -121,6 +123,8 @@ export async function createBoletoPayment(
   try {
     const expiresAt = nextBusinessDayEnd()
 
+    const notificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://kkmarket.com.br'}/api/webhooks/mercadopago`
+
     const payment = await paymentClient.create({
       body: {
         transaction_amount: params.amount,
@@ -128,6 +132,7 @@ export async function createBoletoPayment(
         description:        params.description,
         external_reference: params.orderId,
         date_of_expiration: expiresAt,
+        notification_url:   notificationUrl,
         payer: {
           email:      params.buyerEmail,
           first_name: params.buyerFirstName,
@@ -162,6 +167,8 @@ export async function createCreditCardPayment(
   }
 
   try {
+    const notificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://kkmarket.com.br'}/api/webhooks/mercadopago`
+
     const payment = await paymentClient.create({
       body: {
         transaction_amount: params.amount,
@@ -169,6 +176,7 @@ export async function createCreditCardPayment(
         installments:       params.installments ?? 1,
         description:        params.description,
         external_reference: params.orderId,
+        notification_url:   notificationUrl,
         payer:              { email: params.buyerEmail },
       },
     })

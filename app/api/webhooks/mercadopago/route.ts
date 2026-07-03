@@ -84,27 +84,34 @@ interface OrderRow {
 export async function POST(req: Request) {
   const rawBody = await req.text()
 
-  // 1. Verificar assinatura
+  // 1. Verificar assinatura (relaxado para IPNs)
+  // Notificações enviadas via `notification_url` muitas vezes vêm sem `x-signature` correto.
+  // A verdadeira segurança é garantida pois nós pegamos o ID recebido e consultamos
+  // a fonte oficial do MercadoPago (`paymentClient.get`) antes de tomar ação.
   if (!verifyMPSignature(req)) {
-    console.error('[MP Webhook] Assinatura inválida')
-    return new NextResponse('Unauthorized', { status: 401 })
+    console.warn('[MP Webhook] Assinatura inválida ou ausente (ignorando aviso pois faremos hard-fetch)')
   }
 
   // 2. Parse + filtra apenas eventos de pagamento
-  let body: { type?: string; action?: string; data?: { id?: string | number } }
-  try {
-    body = JSON.parse(rawBody)
-  } catch {
-    return new NextResponse('Bad Request', { status: 400 })
+  let body: any = {}
+  if (rawBody) {
+    try {
+      body = JSON.parse(rawBody)
+    } catch {
+      console.warn('[MP Webhook] Body não é JSON válido, tentando por query params...')
+    }
   }
 
-  const eventType = body.type ?? body.action ?? ''
+  const searchParams = new URL(req.url).searchParams
+  const eventType = body.type ?? body.action ?? searchParams.get('type') ?? searchParams.get('topic') ?? ''
+  
   if (!eventType.startsWith('payment')) {
     return new NextResponse('OK', { status: 200 })
   }
 
-  const mpPaymentId = body.data?.id?.toString()
+  const mpPaymentId = body.data?.id?.toString() ?? searchParams.get('data.id') ?? searchParams.get('id')
   if (!mpPaymentId) {
+    console.error('[MP Webhook] ID de pagamento ausente')
     return new NextResponse('Bad Request', { status: 400 })
   }
 
