@@ -150,7 +150,7 @@ export async function signOutAction() {
 
 export async function signInWithOAuthAction(provider: 'google' | 'discord') {
   const supabase = await createClient()
-  const origin = (await headers()).get('origin') || process.env.NEXT_PUBLIC_APP_URL || ''
+  const origin = (await headers()).get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://kkmarket.com.br'
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
