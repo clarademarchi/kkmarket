@@ -2,6 +2,20 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function proxy(request: NextRequest) {
+  // Fix para falhas de Redirect URL do Supabase OAUTH.
+  // Se o Supabase mandar o código PKCE para a rota errada (ex: página inicial /?code=UUID), 
+  // nós o capturamos e redirecionamos forçadamente para a rota de callback oficial
+  // preservando a lógica de onboarding e bônus.
+  const code = request.nextUrl.searchParams.get('code')
+  if (code && request.nextUrl.pathname !== '/auth/callback') {
+    // Verifica se o code se parece com o formato UUID gerado pelo Supabase PKCE
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(code)) {
+      const callbackUrl = request.nextUrl.clone()
+      callbackUrl.pathname = '/auth/callback'
+      return NextResponse.redirect(callbackUrl)
+    }
+  }
+
   let supabaseResponse = NextResponse.next({
     request: {
       headers: request.headers,
