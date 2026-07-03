@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Bell, Check, Info, AlertTriangle, ShieldCheck, ShoppingBag, Banknote } from 'lucide-react'
 import { markAsReadAction, markAllAsReadAction } from './actions'
 
@@ -26,6 +27,7 @@ const getIconForType = (type: string) => {
 export default function NotificationsClient({ items: initialItems }: { items: Notification[] }) {
   const [items, setItems] = useState<Notification[]>(initialItems ?? [])
   const [markingAll, setMarkingAll] = useState(false)
+  const router = useRouter()
 
   const unreadCount = items.filter((i) => !i.is_read).length
 
@@ -40,6 +42,19 @@ export default function NotificationsClient({ items: initialItems }: { items: No
     setItems((prev) => prev.map((n) => ({ ...n, is_read: true })))
     await markAllAsReadAction()
     setMarkingAll(false)
+  }
+
+  async function handleRowClick(notification: Notification) {
+    if (!notification.is_read) {
+      handleMarkAsRead(notification.id)
+    }
+    if (notification.type === 'message_received' && notification.reference_type === 'direct_chat') {
+      router.push(`/painel/mensagens?chatId=${notification.reference_id}`)
+    } else if (notification.type === 'message_received' && notification.reference_type === 'order') {
+      router.push(`/pedidos/${notification.reference_id}`)
+    } else if (notification.type === 'order_new' || notification.type === 'order_paid') {
+      router.push(`/pedidos/${notification.reference_id}`)
+    }
   }
 
   if (items.length === 0) {
@@ -69,7 +84,8 @@ export default function NotificationsClient({ items: initialItems }: { items: No
       {items.map((notification) => (
         <div
           key={notification.id}
-          className={`relative flex items-start gap-4 rounded-2xl border p-5 transition-all ${
+          onClick={() => handleRowClick(notification)}
+          className={`relative flex items-start gap-4 rounded-2xl border p-5 transition-all cursor-pointer hover:brightness-110 ${
             notification.is_read
               ? 'border-[var(--gm-ink-faint)]/10 bg-[var(--gm-paper)] opacity-70'
               : 'border-[var(--gm-violet)]/30 bg-[var(--gm-paper-2)] shadow-[0_4px_20px_-8px_var(--gm-violet)]'
@@ -98,7 +114,7 @@ export default function NotificationsClient({ items: initialItems }: { items: No
 
           {!notification.is_read && (
             <button
-              onClick={() => handleMarkAsRead(notification.id)}
+              onClick={(e) => { e.stopPropagation(); handleMarkAsRead(notification.id) }}
               className="absolute bottom-5 right-5 rounded-full bg-[var(--gm-paper-3)] p-2 text-[var(--gm-ink-faint)] hover:bg-[var(--gm-violet)]/20 hover:text-[var(--gm-violet)] transition-colors"
               title="Marcar como lida"
             >
