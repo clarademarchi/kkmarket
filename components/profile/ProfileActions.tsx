@@ -2,9 +2,12 @@
 
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
-export function ProfileActions({ username }: { username: string }) {
+export function ProfileActions({ username, userId }: { username: string, userId: string }) {
   const [following, setFollowing] = useState(false)
+  const [loadingChat, setLoadingChat] = useState(false)
+  const router = useRouter()
 
   const handleFollow = () => {
     setFollowing(!following)
@@ -15,8 +18,29 @@ export function ProfileActions({ username }: { username: string }) {
     }
   }
 
-  const handleChat = () => {
-    toast.info('O chat direto está em desenvolvimento. Por enquanto, utilize o chat do pedido após realizar uma compra.')
+  const handleChat = async () => {
+    if (loadingChat) return
+    setLoadingChat(true)
+    try {
+      const res = await fetch('/api/chats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetUserId: userId })
+      })
+      
+      const data = await res.json()
+      
+      if (!res.ok) {
+        toast.error(data.error || 'Erro ao iniciar chat.')
+        return
+      }
+
+      router.push(`/painel/mensagens?chatId=${data.chatId}`)
+    } catch (e) {
+      toast.error('Ocorreu um erro inesperado.')
+    } finally {
+      setLoadingChat(false)
+    }
   }
 
   return (

@@ -17,9 +17,9 @@ interface ChatSummary {
   updated_at: string
 }
 
-export function DirectChatUI({ currentUserId }: { currentUserId: string }) {
+export function DirectChatUI({ currentUserId, initialChatId }: { currentUserId: string, initialChatId?: string | null }) {
   const [chats, setChats] = useState<ChatSummary[]>([])
-  const [activeChatId, setActiveChatId] = useState<string | null>(null)
+  const [activeChatId, setActiveChatId] = useState<string | null>(initialChatId || null)
   const [messages, setMessages] = useState<ChatMessageData[]>([])
   const [loadingChats, setLoadingChats] = useState(true)
   const [loadingMessages, setLoadingMessages] = useState(false)

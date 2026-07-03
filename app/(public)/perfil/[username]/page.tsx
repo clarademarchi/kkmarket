@@ -225,7 +225,7 @@ export default async function PublicProfilePage({ params }: Props) {
               )}
 
               {/* CTA Buttons */}
-              <ProfileActions username={profile.username} />
+              <ProfileActions username={profile.username} userId={profile.id} />
             </div>
           </aside>
 

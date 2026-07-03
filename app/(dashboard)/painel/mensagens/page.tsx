@@ -6,9 +6,11 @@ export const metadata = {
   title: 'Mensagens Diretas',
 }
 
-export default async function MensagensPage() {
+export default async function MensagensPage({ searchParams }: { searchParams: Promise<{ chatId?: string }> }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  const params = await searchParams
+  const initialChatId = params.chatId || null
 
   if (!user) redirect('/entrar')
 
@@ -20,7 +22,7 @@ export default async function MensagensPage() {
       </div>
 
       <div className="flex-1 overflow-hidden rounded-xl border border-border/40 bg-surface shadow-sm">
-        <DirectChatUI currentUserId={user.id} />
+        <DirectChatUI currentUserId={user.id} initialChatId={initialChatId} />
       </div>
     </div>
   )
