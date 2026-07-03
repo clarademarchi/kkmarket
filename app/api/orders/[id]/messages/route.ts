@@ -201,7 +201,18 @@ export async function POST(
     }
   }
 
-  // 7. last_seen_at do remetente (presença online)
+  // 7. Notificar o destinatário se houver (para chat global)
+  const recipientId = order.buyer_id === user.id ? order.seller_id : order.buyer_id
+  await admin.from('notifications').insert({
+    user_id: recipientId,
+    type: 'chat_message',
+    title: 'Nova mensagem no chat',
+    message: `Você recebeu uma nova mensagem no pedido #${orderId.slice(0, 8)}`,
+    reference_id: orderId,
+    reference_type: 'order',
+  })
+
+  // 8. last_seen_at do remetente (presença online)
   await supabase
     .from('profiles')
     .update({ last_seen_at: new Date().toISOString() })

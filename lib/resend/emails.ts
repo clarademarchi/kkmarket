@@ -201,3 +201,52 @@ export async function sendAutoDeliveryEmail(params: AutoDeliveryEmailParams) {
     }),
   })
 }
+
+// ─── Nova Venda (Vendedor) ───────────────────────────────────────────────────
+
+interface SellerNewOrderParams {
+  to: string
+  sellerName: string
+  productTitle: string
+  amount: number
+  orderId: string
+  hasAutoDelivery: boolean
+}
+
+export async function sendSellerNewOrderEmail(params: SellerNewOrderParams) {
+  const shortId = params.orderId.slice(0, 8).toUpperCase()
+
+  await send({
+    to: params.to,
+    subject: `🎉 Nova venda realizada! — ${params.productTitle}`,
+    html: emailLayout({
+      title: 'Você fez uma venda!',
+      preheader: `Sua venda de ${brl(params.amount)} foi confirmada.`,
+      body: `
+        <p>Olá, <strong>${params.sellerName}</strong>!</p>
+        <p>O pagamento do comprador foi aprovado. <strong>Sua venda está confirmada!</strong></p>
+        <table style="width:100%;margin:20px 0;border-collapse:collapse">
+          <tr>
+            <td style="padding:10px 0;color:#869397;font-size:13px">Pedido</td>
+            <td style="padding:10px 0;color:#dde2f8;font-size:13px;text-align:right;font-weight:700">#${shortId}</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 0;color:#869397;font-size:13px;border-top:1px solid rgba(255,255,255,0.06)">Produto</td>
+            <td style="padding:10px 0;color:#dde2f8;font-size:13px;text-align:right;border-top:1px solid rgba(255,255,255,0.06)">${params.productTitle}</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 0;color:#869397;font-size:13px;border-top:1px solid rgba(255,255,255,0.06)">Valor líquido</td>
+            <td style="padding:10px 0;color:#10b981;font-size:15px;text-align:right;font-weight:800;border-top:1px solid rgba(255,255,255,0.06)">${brl(params.amount)}</td>
+          </tr>
+        </table>
+        <p>${
+          params.hasAutoDelivery
+            ? '⚡ Como o produto tem <strong>entrega automática</strong>, o código já foi enviado para o comprador. Não é necessário enviar manualmente!'
+            : 'Acesse o painel para combinar a entrega pelo chat do pedido com o comprador.'
+        }</p>
+      `,
+      cta: { label: 'Acessar minhas vendas', href: `${SITE_URL}/painel/vendas` },
+    }),
+  })
+}
+
