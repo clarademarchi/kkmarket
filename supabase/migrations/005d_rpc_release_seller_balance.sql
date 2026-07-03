@@ -16,16 +16,10 @@ AS $$
            updated_at = now()
      WHERE user_id = (SELECT user_id FROM locked_tx)
     RETURNING wallet_balance, user_id
-  ),
-  update_tx AS (
-    UPDATE wallet_transactions
-       SET balance_after = (SELECT wallet_balance FROM update_balance)
-     WHERE reference_id = p_order_id
-       AND type = 'order_revenue'
-       AND user_id = (SELECT user_id FROM update_balance)
   )
-  UPDATE user_stats
-     SET total_sales = total_sales + 1,
-         updated_at = now()
-   WHERE user_id = (SELECT user_id FROM update_balance);
+  UPDATE wallet_transactions
+     SET balance_after = (SELECT wallet_balance FROM update_balance)
+   WHERE reference_id = p_order_id
+     AND type = 'order_revenue'
+     AND user_id = (SELECT user_id FROM update_balance);
 $$;
