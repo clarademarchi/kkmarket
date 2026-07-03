@@ -14,11 +14,13 @@ import {
   Settings,
   ShieldCheck,
   Coins,
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/painel',           label: 'Painel',           icon: LayoutDashboard },
+  { href: '/painel/mensagens', label: 'Mensagens',        icon: MessageSquare },
   { href: '/meus-anuncios',    label: 'Meus anúncios',    icon: Megaphone },
   { href: '/minhas-compras',   label: 'Minhas compras',   icon: ShoppingBag },
   { href: '/minhas-vendas',    label: 'Minhas vendas',    icon: TrendingUp },

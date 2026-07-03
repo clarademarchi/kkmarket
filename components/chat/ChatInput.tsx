@@ -7,12 +7,14 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
+import type { ChatMessageData } from './ChatMessage'
+
 const MAX_LEN = 1000
 
 interface ChatInputProps {
   orderId: string
   disabled?: boolean
-  onSent?: () => void
+  onSent?: (msg: ChatMessageData) => void
 }
 
 export function ChatInput({ orderId, disabled, onSent }: ChatInputProps) {
@@ -40,9 +42,9 @@ export function ChatInput({ orderId, disabled, onSent }: ChatInputProps) {
         const body = (await res.json().catch(() => ({}))) as { error?: string }
         throw new Error(body.error ?? 'Falha ao enviar.')
       }
+      const data = await res.json()
       setValue('')
-      onSent?.()
-      // Realtime entrega a mensagem; nada mais a fazer aqui.
+      onSent?.(data.message as ChatMessageData)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro desconhecido.')
     } finally {

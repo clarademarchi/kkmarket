@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   User, LayoutDashboard, ShoppingBag, Store, PlusCircle,
-  Settings, LogOut, Shield, ChevronDown,
+  Settings, LogOut, Shield, ChevronDown, MessageSquare,
 } from 'lucide-react'
 import { signOutAction } from '@/app/actions/auth'
 import { useTransition } from 'react'
@@ -129,6 +129,9 @@ export function UserDropdown({
             </MenuItem>
             <MenuItem href="/painel" icon={<LayoutDashboard className="h-4 w-4" />} onClick={close}>
               Painel
+            </MenuItem>
+            <MenuItem href="/painel/mensagens" icon={<MessageSquare className="h-4 w-4" />} onClick={close}>
+              Mensagens
             </MenuItem>
             <MenuItem href="/minhas-compras" icon={<ShoppingBag className="h-4 w-4" />} onClick={close}>
               Minhas Compras

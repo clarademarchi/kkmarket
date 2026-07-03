@@ -169,7 +169,14 @@ export function ChatWindow({
           ))}
       </div>
 
-      <ChatInput orderId={orderId} disabled={!chatEnabled} />
+      <ChatInput 
+        orderId={orderId} 
+        disabled={!chatEnabled} 
+        onSent={(newMsg) => setMessages((prev) => {
+          if (prev.some((m) => m.id === newMsg.id)) return prev
+          return [...prev, newMsg]
+        })} 
+      />
     </div>
   )
 }
