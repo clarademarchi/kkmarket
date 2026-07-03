@@ -9,6 +9,7 @@ import { MobileNav } from '@/components/layout/MobileNav'
 import { UserNav } from '@/components/auth/UserNav'
 import { CartButton } from '@/components/layout/CartButton'
 import { LanguageSelector } from '@/components/layout/LanguageSelector'
+import { NotificationBell } from '@/components/layout/NotificationBell'
 import { getLanguage, getDictionary } from '@/lib/i18n'
 
 export async function Header() {
@@ -141,6 +142,9 @@ export async function Header() {
             <div className="hidden lg:block ml-1" data-tour="language">
               <LanguageSelector currentLang={lang} />
             </div>
+
+            {/* Notification Bell */}
+            <NotificationBell />
 
             {/* Cart */}
             <CartButton />
