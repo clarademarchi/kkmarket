@@ -5,9 +5,9 @@ import { filterMessage } from '@/lib/chat-filter'
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const chatId = params.id
+  const { id: chatId } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -44,9 +44,9 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const chatId = params.id
+  const { id: chatId } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
