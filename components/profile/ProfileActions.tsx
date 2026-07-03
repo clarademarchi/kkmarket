@@ -4,17 +4,46 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
-export function ProfileActions({ username, userId }: { username: string, userId: string }) {
-  const [following, setFollowing] = useState(false)
+export function ProfileActions({ 
+  username, 
+  userId,
+  initialFollowing = false 
+}: { 
+  username: string; 
+  userId: string;
+  initialFollowing?: boolean;
+}) {
+  const [following, setFollowing] = useState(initialFollowing)
+  const [loadingFollow, setLoadingFollow] = useState(false)
   const [loadingChat, setLoadingChat] = useState(false)
   const router = useRouter()
 
-  const handleFollow = () => {
-    setFollowing(!following)
-    if (!following) {
-      toast.success(`Você começou a seguir ${username}!`)
-    } else {
-      toast.info(`Você deixou de seguir ${username}.`)
+  const handleFollow = async () => {
+    if (loadingFollow) return
+    setLoadingFollow(true)
+    try {
+      if (following) {
+        const res = await fetch(`/api/users/${userId}/follow`, { method: 'DELETE' })
+        if (res.ok) {
+          setFollowing(false)
+          toast.info(`Você deixou de seguir ${username}.`)
+        } else {
+          toast.error('Erro ao deixar de seguir.')
+        }
+      } else {
+        const res = await fetch(`/api/users/${userId}/follow`, { method: 'POST' })
+        if (res.ok) {
+          setFollowing(true)
+          toast.success(`Você começou a seguir ${username}!`)
+        } else {
+          toast.error('Erro ao seguir.')
+        }
+      }
+      router.refresh()
+    } catch (e) {
+      toast.error('Erro de conexão.')
+    } finally {
+      setLoadingFollow(false)
     }
   }
 

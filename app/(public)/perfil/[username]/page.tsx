@@ -49,6 +49,19 @@ export default async function PublicProfilePage({ params }: Props) {
 
   const isOwner = currentUser?.id === profile.id
 
+  let isFollowing = false
+  if (currentUser && !isOwner) {
+    const { data: followData } = await supabase
+      .from('user_followers')
+      .select('follower_id')
+      .eq('follower_id', currentUser.id)
+      .eq('following_id', profile.id)
+      .single()
+    if (followData) {
+      isFollowing = true
+    }
+  }
+
   const stats = profile.user_stats as unknown as {
     total_sales: number
     total_purchases: number
@@ -225,7 +238,11 @@ export default async function PublicProfilePage({ params }: Props) {
               )}
 
               {/* CTA Buttons */}
-              <ProfileActions username={profile.username} userId={profile.id} />
+              <ProfileActions 
+                username={profile.username} 
+                userId={profile.id} 
+                initialFollowing={isFollowing} 
+              />
             </div>
           </aside>
 
