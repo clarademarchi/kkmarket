@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+KKMarket
 
-## Getting Started
+Plataforma web desenvolvida com Next.js, TypeScript e Supabase, com foco em uma experiência moderna, responsiva e organizada para os usuários.
 
-First, run the development server:
+Sobre o projeto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+O KKMarket é uma aplicação web desenvolvida utilizando tecnologias modernas para desenvolvimento frontend e integração com serviços backend.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O projeto envolve desenvolvimento de interfaces, autenticação de usuários, integração com banco de dados e implementação de diferentes funcionalidades dentro da plataforma.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Também foram realizados testes, correções de bugs e melhorias de usabilidade e responsividade, incluindo ajustes específicos para dispositivos móveis.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Tecnologias utilizadas
 
-## Learn More
+* Next.js
+* React
+* TypeScript
+* Tailwind CSS
+* Supabase
+* PostgreSQL
+* JavaScript
+* HTML5
+* CSS3
+* Git e GitHub
 
-To learn more about Next.js, take a look at the following resources:
+Principais funcionalidades
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Autenticação de usuários
+* Integração com Supabase
+* Integração com banco de dados
+* Interface responsiva para desktop e dispositivos móveis
+* Componentização de interfaces
+* Navegação entre páginas
+* Gerenciamento de estado
+* Integração com APIs e serviços externos
+* Validações e tratamento de erros
+* Melhorias de experiência do usuário (UX/UI)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Estrutura do projeto
 
-## Deploy on Vercel
+kkmarket/
+├── app/             # Páginas e rotas da aplicação
+├── components/      # Componentes reutilizáveis
+├── hooks/           # Hooks personalizados
+├── lib/             # Funções e configurações auxiliares
+├── public/          # Arquivos públicos e recursos estáticos
+├── stores/          # Gerenciamento de estado
+├── supabase/        # Configurações e integrações com Supabase
+├── types/           # Tipagens TypeScript
+├── package.json     # Dependências e scripts
+└── next.config.ts   # Configurações do Next.js
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Desenvolvimento
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Durante o desenvolvimento do projeto foram realizadas atividades como:
+
+* Desenvolvimento e manutenção de funcionalidades;
+* Integração com Supabase;
+* Implementação e correção de autenticação;
+* Testes de funcionalidades;
+* Identificação e correção de bugs;
+* Testes de responsividade;
+* Melhorias de UX/UI;
+* Ajustes específicos para dispositivos móveis;
+* Análise e correção de problemas de integração.
+
+Deploy
+
+O projeto possui uma versão publicada na Vercel:
+
+https://kkmarket.vercel.app
